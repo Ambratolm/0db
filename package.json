@@ -1,0 +1,29 @@
+{
+  "name": "0db",
+  "version": "0.0.0",
+  "description": "Simple JSON file database.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ambratolm/0db.git"
+  },
+  "keywords": [
+    "database",
+    "db",
+    "json",
+    "local",
+    "file",
+    "fs",
+    "query",
+    "crud"
+  ],
+  "author": "Ambratolm <ambratolm@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ambratolm/0db/issues"
+  },
+  "homepage": "https://github.com/Ambratolm/0db#readme"
+}
