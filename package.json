@@ -4,7 +4,8 @@
   "description": "Simple JSON file database.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "readme": "markdown-toc -i README.md",
+    "test": "jasmine"
   },
   "repository": {
     "type": "git",
@@ -25,5 +26,13 @@
   "bugs": {
     "url": "https://github.com/Ambratolm/0db/issues"
   },
-  "homepage": "https://github.com/Ambratolm/0db#readme"
+  "homepage": "https://github.com/Ambratolm/0db#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "i": "^0.3.7",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {}
 }

@@ -1,37 +1,25 @@
 //==============================================================================
-// ■ 0db (0db/index.js)
+// ■ Crypt (crypt.js)
 //------------------------------------------------------------------------------
-//     Main entry point.
+//     Crypting utility functions.
 //==============================================================================
-const fileProvider = require("./core/file");
-const collectionProvider = require("./core/collection");
-const crudProvider = require("./core/crud/");
+const bcrypt = require("bcryptjs");
 
 //------------------------------------------------------------------------------
 // ► Exports
 //------------------------------------------------------------------------------
-module.exports = odb;
+module.exports = { encrypt, check };
 
 //------------------------------------------------------------------------------
-// ● Odb-Main
+// ● Encrypt
 //------------------------------------------------------------------------------
-async function odb(filePath = "./db.json") {
-  const file = fileProvider(filePath);
-  let dataObj = await file.load();
-  const db = (collectionName) => dbApi(collectionName, dataObj, file.save);
-  db.file = file;
-  db.dataObj = dataObj;
-  db.drop = async () => {
-    dataObj = {};
-    file.save(dataObj);
-  };
-  return db;
+async function encrypt(text) {
+  return await bcrypt.hash(text, 12);
 }
 
 //------------------------------------------------------------------------------
-// ● Db-Api
+// ● Check
 //------------------------------------------------------------------------------
-function dbApi(collectionName, dataObj, save) {
-  const collection = collectionProvider(collectionName, dataObj, save);
-  return crudProvider(collection);
+async function check(text, hash) {
+  return await bcrypt.compare(text, hash);
 }
