@@ -17,7 +17,7 @@ module.exports = $update;
 //------------------------------------------------------------------------------
 // ● UPDATE-Opeation
 //------------------------------------------------------------------------------
-async function $update(collection, query, changes, options) {
+async function $update(collection, query, changes, options = {}) {
   const {
     partial: partialUpdate,
     one: oneItem,
@@ -33,7 +33,7 @@ async function $update(collection, query, changes, options) {
       `Items matching [${query}] not found in collection [${collection.name}]`
     );
   }
-  for (let [index, item] in items.entries()) {
+  for (const [index, item] of items.entries()) {
     if (fieldsToUniquify) {
       if (
         alreadyInUse(
@@ -61,14 +61,17 @@ async function $update(collection, query, changes, options) {
         item[field] = await encrypt(item[field]);
       }
     }
-    item.$updatedAt = new Date();
+    item.$updatedAt = (new Date()).toISOString();
     const { $id, $createdAt, $updatedAt } = item;
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // FIX THIS! this doesn't change the original object
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     items[index] = partialUpdate
-      ? { ...item, ...changes }
-      : { $id, $createdAt, $updatedAt, ...changes };
+      ? { ...item, ...changes, $id, $createdAt, $updatedAt }
+      : { ...changes, $id, $createdAt, $updatedAt };
   }
   await collection.save();
-  for (let [index, item] of items.entries()) {
+  for (const [index, item] of items.entries()) {
     items[index] = fieldsToPick
       ? pick(item, fieldsToPick)
       : omit(item, fieldsToOmit);

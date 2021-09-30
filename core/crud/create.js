@@ -47,7 +47,7 @@ async function $create(collection, item, options = {}) {
     }
   }
   item.$id = generateId();
-  item.$createdAt = new Date();
+  item.$createdAt = (new Date()).toISOString();
   collection.push(item);
   await collection.save();
   return fieldsToPick ? pick(item, fieldsToPick) : omit(item, fieldsToOmit);
