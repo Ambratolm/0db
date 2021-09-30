@@ -25,7 +25,7 @@ async function $update(collection, query, changes, options = {}) {
     encrypt: fieldsToEncrypt,
     pick: fieldsToPick,
     omit: fieldsToOmit,
-    nocase: ignoreCase
+    nocase: ignoreCase,
   } = options;
   let items = collection.filter(_query(query, options));
   if (items.length === 0) {
@@ -33,14 +33,14 @@ async function $update(collection, query, changes, options = {}) {
       `Items matching [${query}] not found in collection [${collection.name}]`
     );
   }
-  for (const [index, item] of items.entries()) {
+  for (const item of items) {
     if (fieldsToUniquify) {
       if (
         alreadyInUse(
           reject(collection, _query(query, options)),
           pick(changes, fieldsToUniquify),
           {
-            ignoreCase
+            ignoreCase,
           }
         )
       ) {
@@ -61,14 +61,23 @@ async function $update(collection, query, changes, options = {}) {
         item[field] = await encrypt(item[field]);
       }
     }
-    item.$updatedAt = (new Date()).toISOString();
-    const { $id, $createdAt, $updatedAt } = item;
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // FIX THIS! this doesn't change the original object
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    items[index] = partialUpdate
-      ? { ...item, ...changes, $id, $createdAt, $updatedAt }
-      : { ...changes, $id, $createdAt, $updatedAt };
+    const systemFields = {
+      $id: item.$id,
+      $createdAt: item.$createdAt,
+      $updatedAt: new Date().toISOString(),
+    };
+    if (partialUpdate) {
+      Object.assign(item, changes);
+    } else {
+      for (const key in item) {
+        if (Object.keys(changes).includes(key)) {
+          item[key] = changes[key];
+        } else {
+          item[key] = undefined;
+        }
+      }
+    }
+    Object.assign(item, systemFields);
   }
   await collection.save();
   for (const [index, item] of items.entries()) {
