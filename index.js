@@ -6,6 +6,7 @@
 const fileProvider = require("./core/file");
 const collectionProvider = require("./core/collection");
 const crudProvider = require("./core/crud/");
+const { isEmpty } = require("./utils/type");
 
 //------------------------------------------------------------------------------
 // ► Exports
@@ -18,6 +19,7 @@ module.exports = odb;
 async function odb(filePath = "./db.json") {
   const file = fileProvider(filePath);
   let dataObj = await file.load();
+  if (isEmpty(dataObj)) await file.save(dataObj);
   const db = (collectionName) => dbApi(collectionName, dataObj, file.save);
   db.file = file;
   db.dataObj = dataObj;

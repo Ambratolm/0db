@@ -17,7 +17,7 @@ module.exports = $create;
 //------------------------------------------------------------------------------
 // ● CREATE-Opeation
 //------------------------------------------------------------------------------
-async function $create(collection, item, options = {}) {
+async function $create(collection, item = {}, options = {}) {
   const {
     unique: fieldsToUniquify,
     encrypt: fieldsToEncrypt,
