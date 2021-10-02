@@ -18,6 +18,7 @@ module.exports = $crud;
 //------------------------------------------------------------------------------
 function $crud(collection) {
   return {
+    name: collection.name,
     async create(item, options) {
       return $create(collection, item, options);
     },

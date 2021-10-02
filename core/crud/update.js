@@ -17,7 +17,7 @@ module.exports = $update;
 //------------------------------------------------------------------------------
 // ● UPDATE-Opeation
 //------------------------------------------------------------------------------
-async function $update(collection, query, changes, options = {}) {
+async function $update(collection, query, changes = {}, options = {}) {
   const {
     partial: partialUpdate,
     one: oneItem,
@@ -30,7 +30,7 @@ async function $update(collection, query, changes, options = {}) {
   let items = collection.filter(_query(query, options));
   if (items.length === 0) {
     throw Error(
-      `Items matching [${query}] not found in collection [${collection.name}]`
+      `Items matching [${JSON.stringify(query)}] not found in collection [${collection.name}]`
     );
   }
   for (const item of items) {
@@ -97,5 +97,7 @@ function _query(query, options) {
     return matches(query, { ignoreCase });
   } else if (isFunction(query)) {
     return query;
+  } else {
+    return () => {};
   }
 }
