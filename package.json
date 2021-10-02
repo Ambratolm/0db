@@ -5,8 +5,18 @@
   "main": "index.js",
   "scripts": {
     "readme": "markdown-toc -i README.md",
-    "test": "jasmine"
+    "test": "nodemon $test/ --ignore db.json --ignore big.db.json"
   },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "i": "^0.3.7",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {},
+  "author": "Ambratolm <ambratolm@gmail.com>",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Ambratolm/0db.git"
@@ -21,18 +31,8 @@
     "query",
     "crud"
   ],
-  "author": "Ambratolm <ambratolm@gmail.com>",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Ambratolm/0db/issues"
   },
-  "homepage": "https://github.com/Ambratolm/0db#readme",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "i": "^0.3.7",
-    "jsonwebtoken": "^8.5.1",
-    "lodash": "^4.17.21",
-    "uuid": "^8.3.2"
-  },
-  "devDependencies": {}
+  "homepage": "https://github.com/Ambratolm/0db#readme"
 }
