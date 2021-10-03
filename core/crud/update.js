@@ -19,7 +19,7 @@ module.exports = $update;
 //------------------------------------------------------------------------------
 async function $update(collection, query, changes = {}, options = {}) {
   const {
-    partial: partialUpdate,
+    total: totalUpdate,
     one: oneItem,
     unique: fieldsToUniquify,
     encrypt: fieldsToEncrypt,
@@ -30,7 +30,9 @@ async function $update(collection, query, changes = {}, options = {}) {
   let items = collection.filter(_query(query, options));
   if (items.length === 0) {
     throw Error(
-      `Items matching [${JSON.stringify(query)}] not found in collection [${collection.name}]`
+      `Items matching [${JSON.stringify(query)}] not found in collection [${
+        collection.name
+      }]`
     );
   }
   for (const item of items) {
@@ -66,9 +68,7 @@ async function $update(collection, query, changes = {}, options = {}) {
       $createdAt: item.$createdAt,
       $updatedAt: new Date().toISOString(),
     };
-    if (partialUpdate) {
-      Object.assign(item, changes);
-    } else {
+    if (totalUpdate) {
       for (const key in item) {
         if (Object.keys(changes).includes(key)) {
           item[key] = changes[key];
@@ -76,6 +76,8 @@ async function $update(collection, query, changes = {}, options = {}) {
           item[key] = undefined;
         }
       }
+    } else {
+      Object.assign(item, changes);
     }
     Object.assign(item, systemFields);
   }

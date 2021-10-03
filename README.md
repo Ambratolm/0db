@@ -1,6 +1,6 @@
 > ### 🚧 Work in progress...
 
-# 🔴 0db
+# ⭕ 0db
 
 [![NPM version](https://badge.fury.io/js/0db.svg)](https://npmjs.org/package/0db)
 
@@ -18,29 +18,28 @@ db("users").read({ name: "kenza" });
 db("users").update({ name: "kenza" }, { email: "kenza@new.com" });
 db("users").delete({ name: "kenza" });
 ```
+**0db** is constituted of **four** (`create`, `read`, `update`, and `delete`) methods that represents the **CRUD** operations and **three** (or less) parameters (`item`, `query`, and `options`) considerably (more or less) recurring in the four methods.
 
 <!-- toc -->
 
 - [📥 Installation](#%F0%9F%93%A5-installation)
 - [🏁 Getting Started](#%F0%9F%8F%81-getting-started)
-- [📕 Initialize](#%F0%9F%93%95-initialize)
-- [📕 CREATE](#%F0%9F%93%95-create)
-  - [📕 CREATE Queries](#%F0%9F%93%95-create-queries)
-  - [📕 CREATE Options](#%F0%9F%93%95-create-options)
-  - [📕 CREATE Examples](#%F0%9F%93%95-create-examples)
-- [📕 READ](#%F0%9F%93%95-read)
-  - [📕 READ Queries](#%F0%9F%93%95-read-queries)
-  - [📕 READ Options](#%F0%9F%93%95-read-options)
-  - [📕 READ Examples](#%F0%9F%93%95-read-examples)
-- [📕 UPDATE](#%F0%9F%93%95-update)
-  - [📕 UPDATE Queries](#%F0%9F%93%95-update-queries)
-  - [📕 UPDATE Options](#%F0%9F%93%95-update-options)
-  - [📕 UPDATE Examples](#%F0%9F%93%95-update-examples)
-- [📕 DELETE](#%F0%9F%93%95-delete)
-  - [📕 DELETE Queries](#%F0%9F%93%95-delete-queries)
-  - [📕 DELETE Options](#%F0%9F%93%95-delete-options)
-  - [📕 DELETE Examples](#%F0%9F%93%95-delete-examples)
-- [📕 Other](#%F0%9F%93%95-other)
+- [🚩 Initialize](#%F0%9F%9A%A9-initialize)
+- [🔎 Query](#%F0%9F%94%8E-query)
+- [☑️ Options](#%E2%98%91%EF%B8%8F-options)
+- [💠 CREATE](#%F0%9F%92%A0-create)
+  * [☑️ CREATE Options](#%E2%98%91%EF%B8%8F-create-options)
+  * [🎯 CREATE Examples](#%F0%9F%8E%AF-create-examples)
+- [💠 READ](#%F0%9F%92%A0-read)
+  * [☑️ READ Options](#%E2%98%91%EF%B8%8F-read-options)
+  * [🎯 READ Examples](#%F0%9F%8E%AF-read-examples)
+- [💠 UPDATE](#%F0%9F%92%A0-update)
+  * [☑️ UPDATE Options](#%E2%98%91%EF%B8%8F-update-options)
+  * [🎯 UPDATE Examples](#%F0%9F%8E%AF-update-examples)
+- [💠 DELETE](#%F0%9F%92%A0-delete)
+  * [☑️ DELETE Options](#%E2%98%91%EF%B8%8F-delete-options)
+  * [🎯 DELETE Examples](#%F0%9F%8E%AF-delete-examples)
+- [↘️ Other](#%E2%86%98%EF%B8%8F-other)
 - [📃 License](#%F0%9F%93%83-license)
 
 <!-- tocstop -->
@@ -126,7 +125,7 @@ const deletedUser = await db("users").update({ email: "kenza@NewEmail.com" });
 
 💡 Note that the `$id` and `$createdAt` fields are created automatically when an item is created, and `$updatedAt` when it is updated.
 
-## 📕 Initialize
+## 🚩 Initialize
 
 ```js
 // Initialize with a "db.json" file in the root directory
@@ -139,7 +138,91 @@ const db = await fsdb("my-database-file.json");
 const db = await fsdb(__dirname + "/my-database-file");
 ```
 
-## 📕 CREATE
+## 🔎 Query
+
+Query parameter in `Read`, `Update`, and `Delete` methods is an object or function that allows targeting specific items in collection.
+
+- Query object :
+
+```
+{
+  fieldName: fieldValue,
+  fieldName: fieldValue,
+  ...etc
+}
+```
+
+Query object is an object of property values to match against collection items.<br />
+A comparison is performed between every item object property values in collection and the query object property values to determine if an item object contains equivalences.<br />
+The items containing the equivalences are returned.
+
+Example:
+```js
+const queryObj = {
+  firstName: "kenza",
+  age: 20,
+  rating: 5
+};
+
+const users = await db("users").read(queryObj);
+```
+
+- Query function :
+
+```
+(item, index?, collection?) => [Boolean]
+```
+
+Query function is a predicate called for every item when iterating over items of collection.<br />
+All items predicate returns truthy for are returned.<br />
+The predicate is invoked with three arguments :
+- `value` : **Required**. The value of the current item.
+- `index` : _Optional_. The index of the current item in collection.
+- `collection` : _Optional_. The collection array-object the current item belongs to.
+
+Example:
+
+```js
+const queryFn = (user) => {
+  return user.name.startsWith("k") && user.age >= 20 && rating >= 5;
+};
+
+const users = await db("users").read(queryFn);
+```
+
+## ☑️ Options
+
+```
+{
+  optionName: optionValue,
+  optionName: optionValue,
+  ...etc
+}
+```
+
+Options parameter in **all** methods is an object that allows to apply additional stuff to the method's subject item or to the method's returned items result.<br />
+Every method can have specific options or common options depending on the context of the method.
+
+Example :
+
+```js
+const options = {
+  unique: ["name", "email"],
+  encrypt: "password",
+  omit: ["email", "password"],
+  nocase: true
+};
+
+const user = {
+  name: "moulay-elhassan",
+  email: "hasson@example.com",
+  password: "secret#hasson?1980"
+}
+
+const createdUser = await db("users").create(user, options);
+```
+
+## 💠 CREATE
 
 ```js
 await db(collectionName).create(item, options);
@@ -158,21 +241,21 @@ Creates a new item in a collection.<br />
 | **@throws**    | Error  |         | If a unique field value is already used |
 | **@throws**    | Error  |         | If a value to encrypt is not a string   |
 
-### 📕 CREATE Queries
+### ☑️ CREATE Options
 
-> No queries.
+| Property | Type               | Default | Description                      |
+| -------- | ------------------ | ------- | -------------------------------- |
+| unique   | String or String[] | ""      | Fields to declare as unique      |
+| encrypt  | String or String[] | ""      | Fields to encrypt                |
+| pick     | String or String[] | ""      | Fields to pick in returned items |
+| omit     | String or String[] | ""      | Fields to omit in returned items |
+| nocase   | Boolean            | false   | If true ignores case in search   |
 
-### 📕 CREATE Options
+💡 When fields are declared as `unique`, a checking for duplicates is done before adding the item.
 
-| Property | Type               | Default | Description                     |
-| -------- | ------------------ | ------- | ------------------------------- |
-| unique   | String or String[] | []      | Fields to make unique           |
-| encrypt  | String or String[] | []      | Fields to encrypt               |
-| pick     | String or String[] | []      | Fields to pick in returned item |
-| omit     | String or String[] | []      | Fields to omit in returned item |
-| nocase   | Boolean            | false   | Ignore case in search           |
+💡 If `nocase` is true, letter case comparison will be ignored in search operations, like for example checking `unique` values.
 
-### 📕 CREATE Examples
+### 🎯 CREATE Examples
 
 ```js
 // Create an item within a collection named "players" (automatically created)
@@ -193,15 +276,15 @@ const createdPlayer = await db("players").create(
   },
   {
     // Options
-    unique: ["name"], // Make "name" field unique
-    encrypt: ["password"], // Encrypt "password" field
+    unique: "name", // Make "name" field unique
+    encrypt: "password", // Encrypt "password" field
     omit: ["password", "level"], // Omit fields in the returned item object
     nocase: true, // Ignore case when comparing strings
   }
 );
 ```
 
-## 📕 READ
+## 💠 READ
 
 ```js
 await db(collectionName).read(query, options);
@@ -215,19 +298,27 @@ Reads an existing item in a collection.<br />
 | -------------- | ------ | ------- | --------------------------------- |
 | collectionName | String |         | Targeted collection name          |
 | query          | Object | {}      | Query object or function          |
-| options        | Object | {}      | Additional options                |
+| options        | Object | {}      | READ options                      |
 | **@returns**   | Array  |         | The read item                     |
 | **@throws**    | Error  |         | If an encrypted field not matched |
 
-### 📕 READ Queries
+### ☑️ READ Options
 
-🚧 ...
+| Property | Type               | Default | Description                        |
+| -------- | ------------------ | ------- | ---------------------------------- |
+| one      | Boolean            | false   | Return only one result (Object)    |
+| pick     | String or String[] | []      | Fields to pick in returned items   |
+| omit     | String or String[] | []      | Fields to omit in returned items   |
+| nocase   | Boolean            | false   | Ignore case in search              |
+| sort     | String or String[] | ""      | Fields to sort by returned items   |
+| order    | String or String[] | "asc"   | Order of sorting of returned items |
+| encrypt  | String or String[] | []      | Fields to encrypt                  |
+| limit    | Number             | MAX     | Number of returned items           |
+| page     | Number             | 0       | Index of pagination (with limit)   |
+| expand   | String             | ""      | Name of collection to expand to    |
+| embed    | String             | ""      | Name of collection to embed        |
 
-### 📕 READ Options
-
-🚧 ...
-
-### 📕 READ Examples
+### 🎯 READ Examples
 
 ```js
 // Read all items in "players" collection
@@ -252,7 +343,7 @@ const player = await db("players").read(
 );
 ```
 
-## 📕 UPDATE
+## 💠 UPDATE
 
 ```js
 await db(collectionName).update(query, changes, options);
@@ -273,15 +364,19 @@ Updates an existing item in a collection.<br />
 | **@throws**    | Error  |         | If a unique field value is already used |
 | **@throws**    | Error  |         | If a value to encrypt is not a string   |
 
-### 📕 UPDATE Queries
+### ☑️ UPDATE Options
 
-🚧 ...
+| Property | Type               | Default | Description                       |
+| -------- | ------------------ | ------- | --------------------------------- |
+| total    | Boolean            | false   | If true overrides all item fields |
+| one      | Boolean            | false   | Return only one result (Object)   |
+| unique   | String or String[] | ""      | Fields to declare as unique       |
+| encrypt  | String or String[] | []      | Fields to encrypt                 |
+| pick     | String or String[] | []      | Fields to pick in returned items  |
+| omit     | String or String[] | []      | Fields to omit in returned items  |
+| nocase   | Boolean            | false   | Ignore case in search             |
 
-### 📕 UPDATE Options
-
-🚧 ...
-
-### 📕 UPDATE Examples
+### 🎯 UPDATE Examples
 
 ```js
 // Update item(s)
@@ -301,7 +396,7 @@ const updatedPlayer = await db("players").update(
 );
 ```
 
-## 📕 DELETE
+## 💠 DELETE
 
 ```js
 await db(collectionName).delete(query, options);
@@ -313,21 +408,22 @@ Deletes an existing item in a collection.<br />
 
 | Parameter      | Type   | Default | Description                       |
 | -------------- | ------ | ------- | --------------------------------- |
-| collectionName | string |         | Targeted collection               |
-| query          | object | {}      | Query object or function          |
-| options        | object | {}      | Additional options                |
-| **@returns**   | object |         | The deleted item                  |
+| collectionName | String |         | Targeted collection name          |
+| query          | Object | {}      | Query object or function          |
+| options        | Object | {}      | Additional options                |
+| **@returns**   | Object |         | The deleted item                  |
 | **@throws**    | Error  |         | If Items matching query not found |
 
-### 📕 DELETE Queries
+### ☑️ DELETE Options
 
-🚧 ...
+| Property | Type               | Default | Description                      |
+| -------- | ------------------ | ------- | -------------------------------- |
+| one      | Boolean            | false   | Return only one result (Object)  |
+| pick     | String or String[] | []      | Fields to pick in returned items |
+| omit     | String or String[] | []      | Fields to omit in returned items |
+| nocase   | Boolean            | false   | Ignore case in search            |
 
-### 📕 DELETE Options
-
-🚧 ...
-
-### 📕 DELETE Examples
+### 🎯 DELETE Examples
 
 ```js
 // Delete item(s)
@@ -345,7 +441,7 @@ const deletedPlayer = await db("players").delete(
 );
 ```
 
-## 📕 Other
+## ↘️ Other
 
 ```js
 // Remove all collections

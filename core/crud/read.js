@@ -51,12 +51,12 @@ function _filterAndMap(items, query, options = {}) {
 }
 //------------------------------------------------------------------------------
 function _orderBy(items, options = {}) {
-  const { fieldsToSortBy, ordersToSortBy } = options;
+  const { sort: fieldsToSortBy, order: ordersToSortBy } = options;
   return orderBy(items, fieldsToSortBy, ordersToSortBy);
 }
 //------------------------------------------------------------------------------
 async function _decrypt(items, options = {}) {
-  const { queryToDecrypt } = options;
+  const { encrypt: queryToDecrypt } = options;
   if (!isEmpty(queryToDecrypt)) {
     for (const item of items) {
       for (const prop in queryToDecrypt) {
@@ -69,7 +69,7 @@ async function _decrypt(items, options = {}) {
 }
 //------------------------------------------------------------------------------
 function _paginate(items, options = {}) {
-  const { perPage, pageNumber } = options;
+  const { limit: perPage, page: pageNumber } = options;
   return paginate(items, perPage, pageNumber);
 }
 //------------------------------------------------------------------------------
