@@ -25,21 +25,21 @@ db("users").delete({ name: "kenza" });
 - [🏁 Getting Started](#%F0%9F%8F%81-getting-started)
 - [📕 Initialize](#%F0%9F%93%95-initialize)
 - [📕 CREATE](#%F0%9F%93%95-create)
-  * [📕 CREATE Queries](#%F0%9F%93%95-create-queries)
-  * [📕 CREATE Options](#%F0%9F%93%95-create-options)
-  * [📕 CREATE Examples](#%F0%9F%93%95-create-examples)
+  - [📕 CREATE Queries](#%F0%9F%93%95-create-queries)
+  - [📕 CREATE Options](#%F0%9F%93%95-create-options)
+  - [📕 CREATE Examples](#%F0%9F%93%95-create-examples)
 - [📕 READ](#%F0%9F%93%95-read)
-  * [📕 READ Queries](#%F0%9F%93%95-read-queries)
-  * [📕 READ Options](#%F0%9F%93%95-read-options)
-  * [📕 READ Examples](#%F0%9F%93%95-read-examples)
+  - [📕 READ Queries](#%F0%9F%93%95-read-queries)
+  - [📕 READ Options](#%F0%9F%93%95-read-options)
+  - [📕 READ Examples](#%F0%9F%93%95-read-examples)
 - [📕 UPDATE](#%F0%9F%93%95-update)
-  * [📕 UPDATE Queries](#%F0%9F%93%95-update-queries)
-  * [📕 UPDATE Options](#%F0%9F%93%95-update-options)
-  * [📕 UPDATE Examples](#%F0%9F%93%95-update-examples)
+  - [📕 UPDATE Queries](#%F0%9F%93%95-update-queries)
+  - [📕 UPDATE Options](#%F0%9F%93%95-update-options)
+  - [📕 UPDATE Examples](#%F0%9F%93%95-update-examples)
 - [📕 DELETE](#%F0%9F%93%95-delete)
-  * [📕 DELETE Queries](#%F0%9F%93%95-delete-queries)
-  * [📕 DELETE Options](#%F0%9F%93%95-delete-options)
-  * [📕 DELETE Examples](#%F0%9F%93%95-delete-examples)
+  - [📕 DELETE Queries](#%F0%9F%93%95-delete-queries)
+  - [📕 DELETE Options](#%F0%9F%93%95-delete-options)
+  - [📕 DELETE Examples](#%F0%9F%93%95-delete-examples)
 - [📕 Other](#%F0%9F%93%95-other)
 - [📃 License](#%F0%9F%93%83-license)
 
@@ -164,13 +164,13 @@ Creates a new item in a collection.<br />
 
 ### 📕 CREATE Options
 
-| Property | Type     | Default | Description                     |
-| -------- | -------- | ------- | ------------------------------- |
-| unique   | string[] | []      | Fields to make unique           |
-| encrypt  | string[] | []      | Fields to encrypt               |
-| pick     | string[] | []      | Fields to pick in returned item |
-| omit     | string[] | []      | Fields to omit in returned item |
-| nocase   | boolean  | false   | Ignore case in search           |
+| Property | Type               | Default | Description                     |
+| -------- | ------------------ | ------- | ------------------------------- |
+| unique   | String or String[] | []      | Fields to make unique           |
+| encrypt  | String or String[] | []      | Fields to encrypt               |
+| pick     | String or String[] | []      | Fields to pick in returned item |
+| omit     | String or String[] | []      | Fields to omit in returned item |
+| nocase   | Boolean            | false   | Ignore case in search           |
 
 ### 📕 CREATE Examples
 

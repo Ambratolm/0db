@@ -37,10 +37,10 @@ async function $create(collection, item = {}, options = {}) {
     }
   }
   if (fieldsToEncrypt) {
-    for (const field of fieldsToEncrypt) {
+    for (const field in pick(item, fieldsToEncrypt)) {
       if (!isString(item[field])) {
         throw new Error(
-          `Could not encrypt [${field}: ${item[field]}] field value because it is not a string `
+          `Could not encrypt [${field}: ${item[field]}] field value because it is not a string`
         );
       }
       item[field] = await encrypt(item[field]);
