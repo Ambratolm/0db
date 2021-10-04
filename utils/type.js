@@ -24,8 +24,7 @@ module.exports = {
 //------------------------------------------------------------------------------
 function isEmpty(value) {
   return (
-    [Object, Array].includes((value || {}).constructor) &&
-    !Object.entries(value || {}).length
+    typeof (value || {}) === "object" && !Object.entries(value || {}).length
   );
 }
 

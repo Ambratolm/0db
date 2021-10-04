@@ -17,7 +17,7 @@ module.exports = $read;
 //------------------------------------------------------------------------------
 // ● READ-Opeation
 //------------------------------------------------------------------------------
-async function $read(collection, query, options = {}) {
+async function $read(collection, query = {}, options = {}) {
   const { one: oneItem } = options;
   let items = _filterAndMap(collection, query, options);
   items = _orderBy(items, options);

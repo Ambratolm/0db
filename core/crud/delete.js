@@ -24,16 +24,18 @@ async function $delete(collection, query, options = {}) {
     nocase: ignoreCase
   } = options;
   let items = [];
-  if (isObject(query)) {
-    items = remove(collection, matches(query, { ignoreCase }));
-  } else if (isFunction(query)) {
-    items = remove(collection, query);
+  if (query) {
+    if (isObject(query)) {
+      items = remove(collection, matches(query, { ignoreCase }));
+    } else if (isFunction(query)) {
+      items = remove(collection, query);
+    }
   }
-  if (items.length === 0) {
-    throw new Error(
-      `Items matching [${query}] not found in collection [${collection.name}]`
-    );
-  }
+  // if (items.length === 0) {
+  //   throw new Error(
+  //     `Items matching [${query}] not found in collection [${collection.name}]`
+  //   );
+  // }
   await collection.save();
   for (let [index, item] of items.entries()) {
     items[index] = fieldsToPick

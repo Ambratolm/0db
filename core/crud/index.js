@@ -25,8 +25,8 @@ function $crud(collection) {
     async read(query, options) {
       return $read(collection, query, options);
     },
-    async update(query, item, options) {
-      return $update(collection, query, item, options);
+    async update(query, changes, options) {
+      return $update(collection, query, changes, options);
     },
     async delete(query, options) {
       return $delete(collection, query, options);

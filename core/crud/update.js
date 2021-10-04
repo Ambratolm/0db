@@ -3,7 +3,7 @@
 //------------------------------------------------------------------------------
 //     UPDATE opeation for database CRUD operations.
 //=============================================================================
-const { isObject, isFunction, isString } = require("../../utils/type");
+const { isObject, isFunction, isString, isEmpty } = require("../../utils/type");
 const { matches } = require("../../utils/compare");
 const { reject, alreadyInUse } = require("../../utils/range");
 const { pick, omit } = require("../../utils/convert");
@@ -28,13 +28,13 @@ async function $update(collection, query, changes = {}, options = {}) {
     nocase: ignoreCase,
   } = options;
   let items = collection.filter(_query(query, options));
-  if (items.length === 0) {
-    throw Error(
-      `Items matching [${JSON.stringify(query)}] not found in collection [${
-        collection.name
-      }]`
-    );
-  }
+  // if (items.length === 0) {
+  //   throw Error(
+  //     `Items matching [${JSON.stringify(query)}] not found in collection [${
+  //       collection.name
+  //     }]`
+  //   );
+  // }
   for (const item of items) {
     if (fieldsToUniquify) {
       if (
@@ -87,7 +87,7 @@ async function $update(collection, query, changes = {}, options = {}) {
       ? pick(item, fieldsToPick)
       : omit(item, fieldsToOmit);
   }
-  return oneItem ? items[0] : items;
+  return oneItem ? items[0] || {} : items;
 }
 
 //------------------------------------------------------------------------------
@@ -95,11 +95,12 @@ async function $update(collection, query, changes = {}, options = {}) {
 //------------------------------------------------------------------------------
 function _query(query, options) {
   const { nocase: ignoreCase } = options;
-  if (isObject(query)) {
-    return matches(query, { ignoreCase });
-  } else if (isFunction(query)) {
-    return query;
-  } else {
-    return () => {};
+  if (query) {
+    if (isObject(query)) {
+      return matches(query, { ignoreCase });
+    } else if (isFunction(query)) {
+      return query;
+    }
   }
+  return () => false;
 }

@@ -108,13 +108,13 @@ const deletedUser = await db("users").update({ email: "kenza@NewEmail.com" });
   "users": [
     {
       "name": "kenza",
-      "email: "kenza@example.com",
+      "email": "kenza@example.com",
       "$id": "8c8f128e-4905-4e77-b664-e03f6de5e952",
       "$createdAt": "2021-09-05T21:40:27Z"
     },
     {
       "name": "ambratolm",
-      "email: "ambratolm@example.com",
+      "email": "ambratolm@example.com",
       "$id": "5211133c-a183-4c99-90ab-f857adf5442a",
       "$createdAt": "2002-11-01T22:12:55Z",
       "$updatedAt": "2021-10-02T00:00:00Z"
@@ -225,11 +225,12 @@ const createdUser = await db("users").create(user, options);
 ## 💠 CREATE
 
 ```js
-await db(collectionName).create(item, options);
+await db(collectionName).create(item?, options?);
 ```
 
 Creates a new item in a collection.<br />
 💡 If the specified collection doesn't exist it will be created automatically.<br />
+💡 If no item object is specified (omitted, `null`, or `undefined`), an empty item is created with no fields except the system fields (with names starting with $ sign).<br />
 💡 The created item is returned.
 
 | Parameter      | Type   | Default | Description                             |
@@ -287,11 +288,12 @@ const createdPlayer = await db("players").create(
 ## 💠 READ
 
 ```js
-await db(collectionName).read(query, options);
+await db(collectionName).read(query?, options?);
 ```
 
 Reads an existing item in a collection.<br />
 💡 If the specified collection doesn't exist it will be created automatically.<br />
+💡 If no query is specified (omitted, `null`, or `undefined`), the query defaults to empty query `{}` which returns all items.<br />
 💡 The read items are returned.
 
 | Parameter      | Type   | Default | Description                       |
@@ -346,11 +348,14 @@ const player = await db("players").read(
 ## 💠 UPDATE
 
 ```js
-await db(collectionName).update(query, changes, options);
+await db(collectionName).update(query?, changes?, options?);
 ```
 
 Updates an existing item in a collection.<br />
 💡 If the specified collection doesn't exist it will be created automatically.<br />
+💡 If no query is specified (omitted, `null`, or `undefined`), no item is updated.<br />
+💡 If an empty query `{}` is specified, all items are updated.
+💡 If no changes are specified (omitted, `null`, or `undefined`), the changes default to empty changes `{}` which only updates the `$updatedAt` field in targeted items.
 💡 The updated items are returned.
 
 | Parameter      | Type   | Default | Description                             |
@@ -399,12 +404,14 @@ const updatedPlayer = await db("players").update(
 ## 💠 DELETE
 
 ```js
-await db(collectionName).delete(query, options);
+await db(collectionName).delete(query?, options?);
 ```
 
 Deletes an existing item in a collection.<br />
 💡 If the specified collection doesn't exist it will be created automatically.<br />
-💡 The deleted item is returned.
+💡 If no query is specified (omitted, `null`, or `undefined`), no item is deleted.<br />
+💡 If an empty query `{}` is specified, all items are deleted.<br />
+💡 The deleted items are returned.
 
 | Parameter      | Type   | Default | Description                       |
 | -------------- | ------ | ------- | --------------------------------- |
