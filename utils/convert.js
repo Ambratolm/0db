@@ -3,20 +3,67 @@
 //------------------------------------------------------------------------------
 //     Type conversion utility functions.
 //==============================================================================
-const { pick, omit } = require("lodash");
 const { singularize } = require("i")();
+const { isString, isArray } = require("./type");
 
 //------------------------------------------------------------------------------
 // ► Exports
 //------------------------------------------------------------------------------
 module.exports = {
-  /* Non-native */pick,
-  /* Non-native */omit,
-  /* Non-native */singularize,
+  pick,
+  omit,
+  /* Non-native */ singularize,
   stringToArray,
   expand,
   embed,
 };
+
+//------------------------------------------------------------------------------
+// ● Pick
+//------------------------------------------------------------------------------
+function pick(obj = {}, fields = [], mutate = false) {
+  if (!mutate) {
+    obj = { ...obj };
+  }
+  if (isArray(fields)) {
+    for (const key in obj) {
+      if (!fields.includes(key)) {
+        delete obj[key];
+      }
+    }
+  } else {
+    for (const key in obj) {
+      if (key !== fields) {
+        delete obj[key];
+      }
+    }
+  }
+  return obj;
+}
+
+//------------------------------------------------------------------------------
+// ● Omit
+//------------------------------------------------------------------------------
+function omit(obj = {}, fields = [], mutate = false) {
+  if (!mutate) {
+    obj = { ...obj };
+  }
+  if (isString(fields)) {
+    const field = fields;
+    for (const key in obj) {
+      if (key === field) {
+        delete obj[key];
+      }
+    }
+  } else if (isArray(fields)) {
+    for (const key in obj) {
+      if (fields.includes(key)) {
+        delete obj[key];
+      }
+    }
+  }
+  return obj;
+}
 
 //------------------------------------------------------------------------------
 // ● String-To-Array

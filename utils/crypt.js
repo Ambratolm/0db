@@ -3,7 +3,7 @@
 //------------------------------------------------------------------------------
 //     Crypting utility functions.
 //==============================================================================
-const bcrypt = require("bcryptjs");
+const { hash, compare } = require("bcryptjs");
 
 //------------------------------------------------------------------------------
 // ► Exports
@@ -14,12 +14,12 @@ module.exports = { encrypt, check };
 // ● Encrypt
 //------------------------------------------------------------------------------
 async function encrypt(text) {
-  return await bcrypt.hash(text, 12);
+  return hash(text, 12);
 }
 
 //------------------------------------------------------------------------------
 // ● Check
 //------------------------------------------------------------------------------
 async function check(text, hash) {
-  return await bcrypt.compare(text, hash);
+  return compare(text, hash);
 }

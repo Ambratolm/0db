@@ -3,15 +3,13 @@
 //------------------------------------------------------------------------------
 //     Range Management utility functions.
 //==============================================================================
-const { find, findIndex, reject, remove, orderBy } = require("lodash");
+const { reject, remove, orderBy } = require("lodash");
 const { partiallyMatches } = require("./compare");
 
 //------------------------------------------------------------------------------
 // ► Exports
 //------------------------------------------------------------------------------
 module.exports = {
-  // /* Non-native */find,
-  // /* Non-native */findIndex,
   /* Non-native */ reject,
   /* Non-native */ remove,
   /* Non-native */ orderBy,
