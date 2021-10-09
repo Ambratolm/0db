@@ -23,7 +23,7 @@ async function $read(collection, query = {}, options = {}) {
   items = _filterAndMap(items, query, options);
   items = _orderBy(items, options);
   items = _paginate(items, options);
-  items = _expandOrEmbed(items, collection.name, options);
+  items = _expandOrEmbed(collection, items, collection.name, options);
   return oneItem ? items[0] : items;
 }
 
@@ -83,14 +83,41 @@ function _paginate(items, options = {}) {
   return paginate(items, perPage, pageNumber);
 }
 //------------------------------------------------------------------------------
-function _expandOrEmbed(items, collectionName, options = {}) {
-  const { expand: expandCollectionName, embed: embedCollectionName } = options;
-  if (expandCollectionName) {
-    items = items.map((item) => expand(item, expandCollectionName));
-  }
-  if (embedCollectionName) {
+function _expandOrEmbed(collection, items, collectionName, options = {}) {
+  const {
+    /** Expand-Example:
+      { expand: "author", to: "users", via: "$id" }
+      • author:String => user:Object (user owning the note)
+    **/
+    expand: localFieldToExpand,
+    to: collectionNameToExpandTo,
+    via: foreignFieldToExpandVia,
+    /** Embed-Example:
+      { embed: "notes", of: "author", in: "$id" }
+      • $id:String => notes:Array (notes belonging to the user)
+    **/
+    embed: collectionNameToEmbed,
+    of: foreignFieldToEmbedOf,
+    via: localFieldToEmbedIn
+  } = options;
+  if (collectionNameToExpandTo) {
     items = items.map((item) =>
-      embed(item, collectionName, embedCollectionName)
+      expand(item, {
+        localField: localFieldToExpand,
+        foreignField: foreignFieldToExpandVia,
+        foreignArray: collection.dataObj[collectionNameToExpandTo],
+        newField: collectionNameToExpandTo, // <== singularize maybe :3
+      })
+    );
+  }
+  if (collectionNameToEmbed) {
+    items = items.map((item) =>
+      embed(item, {
+        localField: localFieldToEmbedIn,
+        foreignField: foreignFieldToEmbedOf,
+        foreignArray: collection.dataObj[collectionNameToEmbed],
+        newField: collectionNameToEmbed,
+      })
     );
   }
   return items;

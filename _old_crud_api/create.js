@@ -23,7 +23,7 @@ async function $create(collection, item = {}, options = {}) {
     encrypt: fieldsToEncrypt,
     pick: fieldsToPick,
     omit: fieldsToOmit,
-    nocase: ignoreCase
+    nocase: ignoreCase,
   } = options;
   if (fieldsToUniquify) {
     if (
@@ -40,14 +40,16 @@ async function $create(collection, item = {}, options = {}) {
     for (const field in pick(item, fieldsToEncrypt)) {
       if (!isString(item[field])) {
         throw new Error(
-          `Could not encrypt [${field}: ${JSON.stringify(item[field])}] field value because it is not a string`
+          `Could not encrypt [${field}: ${JSON.stringify(
+            item[field]
+          )}] field value because it is not a string`
         );
       }
       item[field] = await encrypt(item[field]);
     }
   }
   item.$id = generateId();
-  item.$createdAt = (new Date()).toISOString();
+  item.$createdAt = new Date().toISOString();
   collection.push(item);
   await collection.save();
   return fieldsToPick ? pick(item, fieldsToPick) : omit(item, fieldsToOmit);

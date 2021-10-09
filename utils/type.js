@@ -16,6 +16,9 @@ module.exports = {
   isObject,
   isArray,
   isFunction,
+  isUndefined,
+  isNull,
+  isDataObject,
 };
 
 //------------------------------------------------------------------------------
@@ -31,11 +34,7 @@ function isEmpty(value) {
 // ● Is-Primitive
 //------------------------------------------------------------------------------
 function isPrimitive(value) {
-  return (
-    typeof value === "string" ||
-    typeof value === "number" ||
-    typeof value === "boolean"
-  );
+  return isString(value) || isNumber(value) || isBoolean(value);
 }
 
 //------------------------------------------------------------------------------
@@ -48,8 +47,8 @@ function isString(value) {
 //------------------------------------------------------------------------------
 // ● Is-Number
 //------------------------------------------------------------------------------
-function isNumber() {
-  return typeof value === "number";
+function isNumber(value) {
+  return !isNaN(value) && typeof value === "number";
 }
 
 //------------------------------------------------------------------------------
@@ -63,7 +62,7 @@ function isBoolean() {
 // ● Is-Object
 //------------------------------------------------------------------------------
 function isObject(value) {
-  return typeof value === "object" && !Array.isArray(value);
+  return typeof value === "object";
 }
 
 //------------------------------------------------------------------------------
@@ -78,4 +77,31 @@ function isArray(value) {
 //------------------------------------------------------------------------------
 function isFunction(value) {
   return typeof value === "function";
+}
+
+//------------------------------------------------------------------------------
+// ● Is-Undefined
+//------------------------------------------------------------------------------
+function isUndefined(value) {
+  return value === undefined;
+}
+
+//------------------------------------------------------------------------------
+// ● Is-Null
+//------------------------------------------------------------------------------
+function isNull(value) {
+  return value === null;
+}
+
+//------------------------------------------------------------------------------
+// ● Is-DataObject
+//------------------------------------------------------------------------------
+function isDataObject(value) {
+  return (
+    !isUndefined(value) &&
+    !isNull(value) &&
+    !isFunction(value) &&
+    !isArray(value) &&
+    isObject(value)
+  );
 }

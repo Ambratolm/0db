@@ -75,13 +75,13 @@ function stringToArray(value) {
 //------------------------------------------------------------------------------
 // ● Expand
 //------------------------------------------------------------------------------
-function expand(obj = {}, query = {}) {
+function expand(obj = {}, config = {}) {
   const {
-    localField = "someId",
-    foreignField = "id",
+    localField = "_someId",
+    foreignField = "_id",
     foreignArray = [],
-    newField = `${localField}_expandation`,
-  } = query;
+    newField = `_${localField}_expandation`,
+  } = config;
   const item = { ...obj };
   item[newField] = foreignArray.find(
     (foreignItem) => foreignItem[foreignField] === item[localField]
@@ -92,14 +92,14 @@ function expand(obj = {}, query = {}) {
 //------------------------------------------------------------------------------
 // ● Embed
 //------------------------------------------------------------------------------
-function embed(obj = {}, query = {}) {
+function embed(obj = {}, config = {}) {
   const {
-    localField = "id",
-    foreignField = "someId",
+    localField = "_id",
+    foreignField = "_someId",
     foreignArray = [],
-    newField = "embedment",
+    newField = "_embedment",
     count = false,
-  } = query;
+  } = config;
   const item = { ...obj };
   const result = foreignArray.filter(
     (foreignItem) => foreignItem[foreignField] === item[localField]

@@ -27,8 +27,13 @@ function comparePrimitives(valueA, valueB, options = {}) {
         valueB = valueB.trim();
       }
       if (ignoreCase) {
-        valueA = valueA.toUpperCase();
-        valueB = valueB.toUpperCase();
+        valueA = valueA.toLowerCase();
+        valueB = valueB.toLowerCase();
+      }
+    }
+    if (typeof valueA === "number") {
+      if (isNaN(valueA) && isNaN(valueB)) {
+        return true;
       }
     }
     return valueA === valueB;
