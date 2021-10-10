@@ -1,23 +1,20 @@
 //==============================================================================
-// ■ CREATE (create.js)
+// ■ CREATE (create/index.js)
 //------------------------------------------------------------------------------
 //     CREATE opeation.
 //=============================================================================
-const Operation = require("../core/Operation");
-const defineSystemFields = require("./define-system-fields");
+const Operation = require("../../core/Operation");
+const system = require("./system");
+const unique = require("./unique");
+const encrypt = require("./encrypt");
 
 //------------------------------------------------------------------------------
 // ► CREATE-Operation
 //------------------------------------------------------------------------------
 module.exports = new Operation({
   name: "CREATE",
-  tasks: [ defineSystemFields ],
-  async action({ collection, items, options }) {
-    const { autoSave = true } = options;
-    const createdItems = collection.create(items);
-    if (autoSave) {
-      await collection.save();
-    }
-    return createdItems;
+  tasks: [ system, unique, encrypt ],
+  action({ collection, items }) {
+    return collection.create(items);
   },
 });

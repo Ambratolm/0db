@@ -97,11 +97,5 @@ function isNull(value) {
 // ● Is-DataObject
 //------------------------------------------------------------------------------
 function isDataObject(value) {
-  return (
-    !isUndefined(value) &&
-    !isNull(value) &&
-    !isFunction(value) &&
-    !isArray(value) &&
-    isObject(value)
-  );
+  return !!value && isObject(value) && !isArray(value);
 }

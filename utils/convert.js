@@ -4,7 +4,7 @@
 //     Type conversion utility functions.
 //==============================================================================
 const { singularize } = require("i")();
-const { isString, isArray } = require("./type");
+const { isString, isDataObject, isArray } = require("./type");
 
 //------------------------------------------------------------------------------
 // ► Exports
@@ -13,7 +13,8 @@ module.exports = {
   pick,
   omit,
   /* Non-native */ singularize,
-  stringToArray,
+  first,
+  array,
   expand,
   embed,
 };
@@ -21,55 +22,84 @@ module.exports = {
 //------------------------------------------------------------------------------
 // ● Pick
 //------------------------------------------------------------------------------
-function pick(obj = {}, fields = [], mutate = false) {
-  if (!mutate) {
-    obj = { ...obj };
-  }
-  if (isArray(fields)) {
-    for (const key in obj) {
-      if (!fields.includes(key)) {
-        delete obj[key];
+function pick(objs, fields, mutate = false) {
+  function pickForOne(obj) {
+    if (isString(fields)) {
+      const field = fields;
+      for (const key in obj) {
+        if (key !== field) {
+          delete obj[key];
+        }
+      }
+    } else if (isArray(fields)) {
+      for (const key in obj) {
+        if (!fields.includes(key)) {
+          delete obj[key];
+        }
       }
     }
-  } else {
-    for (const key in obj) {
-      if (key !== fields) {
-        delete obj[key];
+  }
+  if (isDataObject(objs)) {
+    if (!mutate) objs = { ...objs };
+    pickForOne(objs);
+  } else if (isArray(objs)) {
+    if (!mutate) objs = [...objs];
+    for (const obj of objs) {
+      if (isDataObject(obj)) {
+        pickForOne(obj);
       }
     }
   }
-  return obj;
+  return objs;
 }
 
 //------------------------------------------------------------------------------
 // ● Omit
 //------------------------------------------------------------------------------
-function omit(obj = {}, fields = [], mutate = false) {
-  if (!mutate) {
-    obj = { ...obj };
-  }
-  if (isString(fields)) {
-    const field = fields;
-    for (const key in obj) {
-      if (key === field) {
-        delete obj[key];
+function omit(objs, fields, mutate = false) {
+  function omitForOne(obj) {
+    if (isString(fields)) {
+      const field = fields;
+      for (const key in obj) {
+        if (key === field) {
+          delete obj[key];
+        }
+      }
+    } else if (isArray(fields)) {
+      for (const key in obj) {
+        if (fields.includes(key)) {
+          delete obj[key];
+        }
       }
     }
-  } else if (isArray(fields)) {
-    for (const key in obj) {
-      if (fields.includes(key)) {
-        delete obj[key];
+
+  }
+  if (isDataObject(objs)) {
+    if (!mutate) objs = { ...objs };
+    omitForOne(objs);
+  } else if (isArray(objs)) {
+    if (!mutate) objs = [...objs];
+    for (const obj of objs) {
+      if (isDataObject(obj)) {
+        omitForOne(obj);
       }
     }
   }
-  return obj;
+  return objs;
 }
 
 //------------------------------------------------------------------------------
-// ● String-To-Array
+// ● First
 //------------------------------------------------------------------------------
-function stringToArray(value) {
-  return value ? (Array.isArray(value) ? value : [value]) : [];
+function first(value) {
+  return isArray(value) ? value[0] : value;
+}
+
+//------------------------------------------------------------------------------
+// ● Array
+//------------------------------------------------------------------------------
+function array(value) {
+  return value ? (isArray(value) ? value : [value]) : [];
 }
 
 //------------------------------------------------------------------------------

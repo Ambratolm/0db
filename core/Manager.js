@@ -14,9 +14,18 @@ module.exports = class Manager {
     this._globalOptions = options;
   }
 
-  _run(operation, args) {
+  async _run(operation, args) {
     const options = { ...this._globalOptions, ...args.options };
-    return operation.run({ collection: this._collection, ...args, options });
+    const locals = {};
+    args = {
+      collection: this._collection,
+      ...args,
+      options,
+      locals,
+    }
+    let output = this._operations.ALL.preRun(args);
+    output = operation.run({ ...args, output });
+    return this._operations.ALL.postRun({ ...args, output });
   }
 
   async create(items, options = {}) {

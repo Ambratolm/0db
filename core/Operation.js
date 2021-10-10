@@ -27,6 +27,14 @@ module.exports = class Operation {
     if (after) this._postActionTasks.add(after);
   }
 
+  async preRun(args) {
+    return this._preActionTasks.run(args);
+  }
+
+  async postRun(args) {
+    return this._postActionTasks.run(args);
+  }
+
   async run(args) {
     let output = await this._preActionTasks.run(args);
     let returnedValue = await this._action({ ...args, output });

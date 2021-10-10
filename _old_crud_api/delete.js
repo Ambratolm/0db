@@ -18,9 +18,9 @@ module.exports = $delete;
 //------------------------------------------------------------------------------
 async function $delete(collection, query, options = {}) {
   const {
-    one: oneItem,
-    pick: fieldsToPick,
-    omit: fieldsToOmit,
+    // one: oneItem,
+    // pick: fieldsToPick,
+    // omit: fieldsToOmit,
     nocase: ignoreCase
   } = options;
   let items = [];
