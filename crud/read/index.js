@@ -11,5 +11,7 @@ const Operation = require("../../core/Operation");
 module.exports = new Operation({
   name: "READ",
   tasks: [],
-  async action(args) {},
+  async action({ collection, queryFn }) {
+    return collection.read(queryFn);
+  },
 });

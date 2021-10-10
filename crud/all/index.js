@@ -4,12 +4,12 @@
 //     ALL opeations.
 //=============================================================================
 const Operation = require("../../core/Operation");
-const { save } = require("./save");
+const { system } = require("./system");
 
 //------------------------------------------------------------------------------
 // ► ALL-Operations
 //------------------------------------------------------------------------------
 module.exports = new Operation({
   name: "ALL",
-  tasks: [ save ]
+  tasks: [ system ]
 });

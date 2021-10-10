@@ -57,6 +57,7 @@ function isMatch(obj, query, options) {
 // ● Matches
 //------------------------------------------------------------------------------
 function matches(query, options) {
+  if (typeof query === "function") return query;
   return (obj) => isMatch(obj, query, options);
 }
 
@@ -76,5 +77,6 @@ function isPartialMatch(obj, query, options) {
 // ● Partially-Matches
 //------------------------------------------------------------------------------
 function partiallyMatches(query, options) {
+  if (typeof query === "function") return query;
   return (obj) => isPartialMatch(obj, query, options);
 }

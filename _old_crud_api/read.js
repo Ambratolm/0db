@@ -18,17 +18,39 @@ module.exports = $read;
 // ● READ-Opeation
 //------------------------------------------------------------------------------
 async function $read(collection, query = {}, options = {}) {
-  const { one: oneItem } = options;
+  // const { one: oneItem } = options;
   let items = await _decrypt(collection, query, options);
   items = _filterAndMap(items, query, options);
   items = _orderBy(items, options);
   items = _paginate(items, options);
   items = _expandOrEmbed(collection, items, collection.name, options);
-  return oneItem ? items[0] : items;
+  // return oneItem ? items[0] : items;
 }
 
 //------------------------------------------------------------------------------
 // ● Helpers
+//------------------------------------------------------------------------------
+async function _decrypt(items, query, options = {}) {
+  const { encrypt: fieldsToDecrypt } = options;
+  if (!isEmpty(fieldsToDecrypt)) {
+    const queryToDecrypt = pick(query, fieldsToDecrypt);
+    omit(query, fieldsToDecrypt, true);
+    const matchedItems = [];
+    for (const item of items) {
+      let itemMatched = false;
+      for (const key in queryToDecrypt) {
+        if (item[key]) {
+          itemMatched = await check(queryToDecrypt[key], item[key]);
+        }
+      }
+      if (itemMatched) {
+        matchedItems.push(item);
+      }
+    }
+    return matchedItems;
+  }
+  return items;
+}
 //------------------------------------------------------------------------------
 function _filterAndMap(items, query, options = {}) {
   const {
@@ -54,28 +76,6 @@ function _filterAndMap(items, query, options = {}) {
 function _orderBy(items, options = {}) {
   const { sort: fieldsToSortBy, order: ordersToSortBy } = options;
   return orderBy(items, fieldsToSortBy, ordersToSortBy);
-}
-//------------------------------------------------------------------------------
-async function _decrypt(items, query, options = {}) {
-  const { encrypt: fieldsToDecrypt } = options;
-  if (!isEmpty(fieldsToDecrypt)) {
-    const queryToDecrypt = pick(query, fieldsToDecrypt);
-    omit(query, fieldsToDecrypt, true);
-    const matchedItems = [];
-    for (const item of items) {
-      let itemMatched = false;
-      for (const key in queryToDecrypt) {
-        if (item[key]) {
-          itemMatched = await check(queryToDecrypt[key], item[key]);
-        }
-      }
-      if (itemMatched) {
-        matchedItems.push(item);
-      }
-    }
-    return matchedItems;
-  }
-  return items;
 }
 //------------------------------------------------------------------------------
 function _paginate(items, options = {}) {

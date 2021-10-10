@@ -15,17 +15,14 @@ module.exports = class Manager {
   }
 
   async _run(operation, args) {
-    const options = { ...this._globalOptions, ...args.options };
-    const locals = {};
     args = {
       collection: this._collection,
       ...args,
-      options,
-      locals,
-    }
-    let output = this._operations.ALL.preRun(args);
-    output = operation.run({ ...args, output });
-    return this._operations.ALL.postRun({ ...args, output });
+      options: { ...this._globalOptions, ...args.options },
+    };
+    args.output = this._operations.ALL.preRun(args);
+    args.output = operation.run(args);
+    return this._operations.ALL.postRun(args);
   }
 
   async create(items, options = {}) {

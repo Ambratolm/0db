@@ -11,5 +11,8 @@ const Operation = require("../../core/Operation");
 module.exports = new Operation({
   name: "DELETE",
   tasks: [],
-  async action(args) {},
+  async action({ collection, queryFn, options }) {
+    const { drop } = options;
+    return collection.delete(queryFn, drop);
+  },
 });
