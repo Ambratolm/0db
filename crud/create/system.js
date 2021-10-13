@@ -4,7 +4,7 @@
 //     Define system fields.
 //==============================================================================
 const { generateId } = require("../../utils/id");
-const { isArray, isDataObject } = require("../../utils/type");
+const { forEachDataObject } = require("../../utils/range");
 
 //------------------------------------------------------------------------------
 // ► CREATE/System-Task
@@ -13,20 +13,9 @@ module.exports = {
   before({ items, options }) {
     const { system = true } = options;
     if (!system) return;
-    function defineSystemFields(item) {
+    forEachDataObject(items, (item) => {
       item.$id = generateId();
       item.$createdAt = new Date().toISOString();
-    }
-    if (isDataObject(items)) {
-      const item = items;
-      defineSystemFields(item);
-    }
-    if (isArray(items)) {
-      for (const item of items) {
-        if (isDataObject(item)) {
-          defineSystemFields(item);
-        }
-      }
-    }
+    });
   },
 };

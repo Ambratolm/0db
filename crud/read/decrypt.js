@@ -1,24 +1,17 @@
 //==============================================================================
-// ■ ALL/System (all/system.js)
+// ■ READ/Decrypt (read/decrypt.js)
 //------------------------------------------------------------------------------
-//     Global system stuff.
+//     Check encrypted fields.
 //==============================================================================
-const { matches } = require("../../utils/compare");
+const { pick,omit } = require("../../utils/convert");
 
 //------------------------------------------------------------------------------
-// ► ALL/System-Task
+// ► READ/Decrypt-Task
 //------------------------------------------------------------------------------
 module.exports = {
-  before(args) {
-    const { query, options } = args;
-    if (query) {
-      args.queryFn = matches(query, options);
-    }
-  },
-  async after({ collection, options }) {
-    const { save = true } = options;
-    if (save) {
-      await collection.save();
-    }
+  async before({ query, options }) {
+    const { encrypt: fieldsToDecrypt } = options;
+    const queryToDecrypt = pick(query, fieldsToDecrypt);
+    omit(query, fieldsToDecrypt, true);
   }
 }

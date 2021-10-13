@@ -1,7 +1,7 @@
 //==============================================================================
-// ■ ALL/Alter (alter.js)
+// ■ ALL/Alter (all/alter.js)
 //------------------------------------------------------------------------------
-//     Alters returned output.
+//     Alter value of returned output.
 //==============================================================================
 const { pick, omit, first } = require("../../utils/convert");
 
@@ -11,7 +11,9 @@ const { pick, omit, first } = require("../../utils/convert");
 module.exports = {
   after({ options, output }) {
     let { one: oneItem, pick: fieldsToPick, omit: fieldsToOmit } = options;
-    if (oneItem) output = first(output);
+    if (oneItem) {
+      output = first(output);
+    }
     output = fieldsToPick
       ? pick(output, fieldsToPick)
       : omit(output, fieldsToOmit);

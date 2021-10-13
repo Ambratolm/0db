@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Simple JSON file database.",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "readme": "markdown-toc -i README.md",
     "man-test": "nodemon $test/ --ignore db.json --ignore big.db.json"
@@ -14,7 +15,12 @@
     "lodash": "^4.17.21",
     "uuid": "^8.3.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.15.8",
+    "@babel/eslint-parser": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "eslint": "^8.0.0"
+  },
   "author": "Ambratolm <ambratolm@gmail.com>",
   "license": "MIT",
   "repository": {

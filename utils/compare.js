@@ -5,21 +5,12 @@
 //==============================================================================
 
 //------------------------------------------------------------------------------
-// ● Exports
+// ► Is-Equal
 //------------------------------------------------------------------------------
-module.exports = {
-  comparePrimitives,
-  isMatch,
-  matches,
-  isPartialMatch,
-  partiallyMatches,
-};
-
-//------------------------------------------------------------------------------
-// ● Compare-Primitives
-//------------------------------------------------------------------------------
-function comparePrimitives(valueA, valueB, options = {}) {
-  const { trim = false, ignoreCase = false } = options;
+exports.isEqual = function (valueA, valueB, options = {}) {
+  if (!options || typeof options !== "object" || Array.isArray(options))
+    options = {};
+  const { trim, ignoreCase } = options;
   if (typeof valueA === typeof valueB) {
     if (typeof valueA === "string") {
       if (trim) {
@@ -39,44 +30,44 @@ function comparePrimitives(valueA, valueB, options = {}) {
     return valueA === valueB;
   }
   return false;
-}
+};
 
 //------------------------------------------------------------------------------
-// ● Is-Match
+// ► Is-Match
 //------------------------------------------------------------------------------
-function isMatch(obj, query, options) {
+exports.isMatch = function (obj, query, options) {
   for (const prop in query) {
-    if (!comparePrimitives(obj[prop], query[prop], options)) {
+    if (!exports.isEqual(obj[prop], query[prop], options)) {
       return false;
     }
   }
   return true;
-}
+};
 
 //------------------------------------------------------------------------------
-// ● Matches
+// ► Matches
 //------------------------------------------------------------------------------
-function matches(query, options) {
+exports.matches = function (query, options) {
   if (typeof query === "function") return query;
-  return (obj) => isMatch(obj, query, options);
-}
+  return (obj) => exports.isMatch(obj, query, options);
+};
 
 //------------------------------------------------------------------------------
-// ● Is-Partial-Match
+// ► Is-Partial-Match
 //------------------------------------------------------------------------------
-function isPartialMatch(obj, query, options) {
+exports.isPartialMatch = function (obj, query, options) {
   for (const prop in query) {
-    if (comparePrimitives(obj[prop], query[prop], options)) {
+    if (exports.isEqual(obj[prop], query[prop], options)) {
       return true;
     }
   }
   return false;
-}
+};
 
 //------------------------------------------------------------------------------
-// ● Partially-Matches
+// ► Partially-Matches
 //------------------------------------------------------------------------------
-function partiallyMatches(query, options) {
+exports.partiallyMatches = function (query, options) {
   if (typeof query === "function") return query;
-  return (obj) => isPartialMatch(obj, query, options);
-}
+  return (obj) => exports.isPartialMatch(obj, query, options);
+};

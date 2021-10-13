@@ -4,22 +4,28 @@
 //     Crypting utility functions.
 //==============================================================================
 const { hash, compare } = require("bcryptjs");
-
-//------------------------------------------------------------------------------
-// ► Exports
-//------------------------------------------------------------------------------
-module.exports = { encrypt, check };
+const { forEveryAsync } = require("./range");
 
 //------------------------------------------------------------------------------
 // ● Encrypt
 //------------------------------------------------------------------------------
-async function encrypt(text) {
-  return hash(text, 12);
-}
+exports.encrypt = async function (value, options) {
+  if (!options || typeof options !== "object" || Array.isArray(options))
+    options = {};
+  let { hash: hashFunc } = options;
+  if (typeof hashFunc !== "function") hashFunc = async (text) => hash(text, 12);
+  return forEveryAsync(value, (text) => hashFunc(text), "string");
+};
 
 //------------------------------------------------------------------------------
 // ● Check
 //------------------------------------------------------------------------------
-async function check(text, hash) {
-  return compare(text, hash);
-}
+exports.check = async function check(text, hashText, options) {
+  if (!options || typeof options !== "object" || Array.isArray(options))
+    options = {};
+  let { compare: compareFunc } = options;
+  if (typeof compareFunc !== "function")
+    compareFunc = async (text, hashText) => compare(text, hashText);
+  if (typeof text !== "string" || typeof hashText !== "string") return false;
+  return compare(text, hashText);
+};

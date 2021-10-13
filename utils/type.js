@@ -5,97 +5,63 @@
 //==============================================================================
 
 //------------------------------------------------------------------------------
-// ► Exports
+// ► Is-Empty
 //------------------------------------------------------------------------------
-module.exports = {
-  isEmpty,
-  isPrimitive,
-  isString,
-  isNumber,
-  isBoolean,
-  isObject,
-  isArray,
-  isFunction,
-  isUndefined,
-  isNull,
-  isDataObject,
-};
-
-//------------------------------------------------------------------------------
-// ● Is-Empty
-//------------------------------------------------------------------------------
-function isEmpty(value) {
+exports.isEmpty = function (value) {
   return (
     typeof (value || {}) === "object" && !Object.entries(value || {}).length
   );
-}
+};
 
 //------------------------------------------------------------------------------
-// ● Is-Primitive
+// ► Is-Primitive
 //------------------------------------------------------------------------------
-function isPrimitive(value) {
-  return isString(value) || isNumber(value) || isBoolean(value);
-}
+exports.isPrimitive = function (value) {
+  return (
+    typeof value === "boolean" ||
+    typeof value === "string" ||
+    (typeof value === "number" && !isNaN(value))
+  );
+};
 
 //------------------------------------------------------------------------------
-// ● Is-String
+// ► Is-String
 //------------------------------------------------------------------------------
-function isString(value) {
+exports.isString = function (value) {
   return typeof value === "string";
-}
+};
 
 //------------------------------------------------------------------------------
-// ● Is-Number
+// ► Is-Number
 //------------------------------------------------------------------------------
-function isNumber(value) {
-  return !isNaN(value) && typeof value === "number";
-}
+exports.isNumber = function (value) {
+  return typeof value === "number" && !isNaN(value);
+};
 
 //------------------------------------------------------------------------------
-// ● Is-Boolean
+// ► Is-Boolean
 //------------------------------------------------------------------------------
-function isBoolean() {
+exports.isBoolean = function (value) {
   return typeof value === "boolean";
-}
+};
 
 //------------------------------------------------------------------------------
-// ● Is-Object
+// ► Is-Object
 //------------------------------------------------------------------------------
-function isObject(value) {
-  return typeof value === "object";
-}
+exports.isObject = function (value) {
+  return !!value && typeof value === "object" && !Array.isArray(value);
+};
 
 //------------------------------------------------------------------------------
-// ● Is-Array
+// ► Is-Array
 //------------------------------------------------------------------------------
-function isArray(value) {
+exports.isArray = function (value) {
   return Array.isArray(value);
-}
+};
 
 //------------------------------------------------------------------------------
-// ● Is-Function
+// ► Is-Function
 //------------------------------------------------------------------------------
-function isFunction(value) {
+exports.isFunction = function (value) {
   return typeof value === "function";
-}
-
-//------------------------------------------------------------------------------
-// ● Is-Undefined
-//------------------------------------------------------------------------------
-function isUndefined(value) {
-  return value === undefined;
-}
-
-//------------------------------------------------------------------------------
-// ● Is-Null
-//------------------------------------------------------------------------------
-function isNull(value) {
-  return value === null;
-}
-
-//------------------------------------------------------------------------------
-// ● Is-DataObject
-//------------------------------------------------------------------------------
-function isDataObject(value) {
-  return !!value && isObject(value) && !isArray(value);
-}
+};

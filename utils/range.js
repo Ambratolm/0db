@@ -3,69 +3,135 @@
 //------------------------------------------------------------------------------
 //     Range Management utility functions.
 //==============================================================================
-const { reject, remove, orderBy } = require("lodash");
+const { orderBy } = require("lodash");
 const { partiallyMatches } = require("./compare");
 
 //------------------------------------------------------------------------------
-// ► Exports
+// ► Order-By
 //------------------------------------------------------------------------------
-module.exports = {
-  /* Non-native */ reject,
-  /* Non-native */ remove,
-  /* Non-native */ orderBy,
-  alreadyInUse,
-  paginate,
-  filterAndMap,
+exports.orderBy = orderBy;
+
+//------------------------------------------------------------------------------
+// ► Remove
+//------------------------------------------------------------------------------
+exports.remove = function (arr, func) {
+  if (!Array.isArray(arr)) arr = [];
+  if (typeof func !== "function") func = () => true;
+  const removedItems = [];
+  let i = arr.length;
+  while (i--) {
+    if (func(arr[i])) {
+      removedItems.push(arr[i]);
+      arr.splice(i, 1);
+    }
+  }
+  return removedItems;
 };
 
 //------------------------------------------------------------------------------
-// ● Already-In-Use
+// ► Reject
 //------------------------------------------------------------------------------
-function alreadyInUse(arr, query, options) {
-  return arr.findIndex(partiallyMatches(query, options)) >= 0;
-}
+exports.reject = function (arr, func) {
+  if (!Array.isArray(arr)) return [];
+  if (typeof func !== "function") func = () => true;
+  const complement = (f) => (x) => !f(x);
+  return arr.filter(complement(func));
+};
 
 //------------------------------------------------------------------------------
-// ● Paginate
+// ► Already-In-Use
 //------------------------------------------------------------------------------
-function paginate(arr = [], limit, page) {
-  if (!limit && !page) {
+exports.alreadyInUse = function (arr, query, options) {
+  if (!Array.isArray(arr)) return false;
+  if (!query || typeof query !== "object" || Array.isArray(query)) return false;
+  if (!options || typeof options !== "object" || Array.isArray(options))
+    options = {};
+  return arr.findIndex(partiallyMatches(query, options)) >= 0;
+};
+
+//------------------------------------------------------------------------------
+// ► For-Every
+//------------------------------------------------------------------------------
+exports.forEvery = function (value, func, type) {
+  if (typeof func !== "function") func = (item) => item;
+  const checkType =
+    type && typeof type === "string" ? (x) => typeof x === type : () => true;
+  const apply = (x, i) => {
+    if (x && checkType(x)) return func(x, i);
+  };
+  if (Array.isArray(value)) {
+    const arr = [];
+    for (const [index, item] of value.entries()) {
+      const output = apply(item, index);
+      if (output) arr.push(output);
+    }
     return arr;
+  } else if (typeof value === "object") {
+    const obj = {};
+    for (const key in value) {
+      const output = apply(value[key], key);
+      if (output) obj[key] = output;
+    }
+    return obj;
+  } else {
+    return apply(value);
   }
+};
+
+//------------------------------------------------------------------------------
+// ► For-Every-Async
+//------------------------------------------------------------------------------
+exports.forEveryAsync = async function (value, func, type) {
+  if (typeof func !== "function") func = async (item) => item;
+  const checkType =
+    type && typeof type === "string" ? (x) => typeof x === type : () => true;
+  const apply = async (x, i) => {
+    if (x && checkType(x)) return func(x, i);
+  };
+  if (Array.isArray(value)) {
+    const arr = [];
+    for (const [index, item] of value.entries()) {
+      const output = await apply(item, index);
+      if (output) arr.push(output);
+    }
+    return arr;
+  } else if (typeof value === "object") {
+    const obj = {};
+    for (const key in value) {
+      const output = await apply(value[key], key);
+      if (output) obj[key] = output;
+    }
+    return obj;
+  } else {
+    return apply(value);
+  }
+};
+
+//------------------------------------------------------------------------------
+// ► Paginate
+//------------------------------------------------------------------------------
+exports.paginate = function (arr, limit, page) {
+  if (!Array.isArray(arr)) return [];
   limit = Number(limit);
   page = Number(page);
-  if (isNaN(limit)) {
-    limit = 10;
-  }
-  if (isNaN(page)) {
-    page = 1;
-  }
-  if (page <= 0) {
-    page = 1;
-  }
-  if (limit <= 0) {
-    limit = 1;
-  }
-  if (limit > arr.length) {
-    limit = arr.length;
-  }
+  if (typeof limit !== "number" || isNaN(limit) || limit <= 0) limit = 1;
+  if (typeof page !== "number" || isNaN(page) || page <= 0) page = 1;
+  if (limit > arr.length) limit = arr.length;
+  if (page > arr.length) page = arr.length;
   const start = (page - 1) * limit;
   const end = (page - 1) * limit + limit;
   return arr.slice(start, end);
-}
+};
 
 //------------------------------------------------------------------------------
-// ● Filter-And-Map
+// ► Filter-And-Map
 //------------------------------------------------------------------------------
-function filterAndMap(arr = [], filterFn, mapFn) {
-  if (typeof filterFn !== "function") {
-    throw new Error("filterFn must be a function");
-  }
-  if (typeof mapFn !== "function") {
-    throw new Error("mapFn must be a function");
-  }
+exports.filterAndMap = function (arr, filterFunc, mapFunc) {
+  if (!Array.isArray(arr)) arr = [];
+  if (typeof filterFunc !== "function") filterFunc = () => true;
+  if (typeof mapFunc !== "function") mapFunc = (item) => item;
   return arr.reduce((stack, item) => {
-    if (filterFn(item)) stack.push(mapFn(item));
+    if (filterFunc(item)) stack.push(mapFunc(item));
     return stack;
   }, []);
-}
+};

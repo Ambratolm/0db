@@ -22,7 +22,7 @@ module.exports = {
 //------------------------------------------------------------------------------
 // ● Pick
 //------------------------------------------------------------------------------
-function pick(objs, fields, mutate = false) {
+function pick(input, fields, { mutate }) {
   function pickForOne(obj) {
     if (isString(fields)) {
       const field = fields;
@@ -39,24 +39,24 @@ function pick(objs, fields, mutate = false) {
       }
     }
   }
-  if (isDataObject(objs)) {
-    if (!mutate) objs = { ...objs };
-    pickForOne(objs);
-  } else if (isArray(objs)) {
-    if (!mutate) objs = [...objs];
-    for (const obj of objs) {
+  if (isDataObject(input)) {
+    if (!mutate) input = { ...input };
+    pickForOne(input);
+  } else if (isArray(input)) {
+    if (!mutate) input = [...input];
+    for (const obj of input) {
       if (isDataObject(obj)) {
         pickForOne(obj);
       }
     }
   }
-  return objs;
+  return input;
 }
 
 //------------------------------------------------------------------------------
 // ● Omit
 //------------------------------------------------------------------------------
-function omit(objs, fields, mutate = false) {
+function omit(input, fields, { mutate }) {
   function omitForOne(obj) {
     if (isString(fields)) {
       const field = fields;
@@ -74,32 +74,32 @@ function omit(objs, fields, mutate = false) {
     }
 
   }
-  if (isDataObject(objs)) {
-    if (!mutate) objs = { ...objs };
-    omitForOne(objs);
-  } else if (isArray(objs)) {
-    if (!mutate) objs = [...objs];
-    for (const obj of objs) {
+  if (isDataObject(input)) {
+    if (!mutate) input = { ...input };
+    omitForOne(input);
+  } else if (isArray(input)) {
+    if (!mutate) input = [...input];
+    for (const obj of input) {
       if (isDataObject(obj)) {
         omitForOne(obj);
       }
     }
   }
-  return objs;
+  return input;
 }
 
 //------------------------------------------------------------------------------
 // ● First
 //------------------------------------------------------------------------------
-function first(value) {
-  return isArray(value) ? value[0] : value;
+function first(input) {
+  return isArray(input) ? input[0] : input;
 }
 
 //------------------------------------------------------------------------------
 // ● Array
 //------------------------------------------------------------------------------
-function array(value) {
-  return value ? (isArray(value) ? value : [value]) : [];
+function array(input) {
+  return input ? (isArray(input) ? input : [input]) : [];
 }
 
 //------------------------------------------------------------------------------
